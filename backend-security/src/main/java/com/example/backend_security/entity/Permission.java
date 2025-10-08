@@ -1,29 +1,30 @@
 package com.example.backend_security.entity;
 
 import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user_statuses")
-public class UserStatus {
+@Table(name = "permissions")
+public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50, nullable = false, unique = true)
+    @Column(length = 100, nullable = false, unique = true)
     private String code;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "status")
-    private Set<User> users = new HashSet<>();
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Role> roles = new HashSet<>();
 
-    public UserStatus() {}
+    public Permission() {}
 
-    public UserStatus(Long id, String code, String description) {
+    public Permission(Long id, String code, String description) {
         this.id = id;
         this.code = code;
         this.description = description;
@@ -39,6 +40,6 @@ public class UserStatus {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Set<User> getUsers() { return users; }
-    public void setUsers(Set<User> users) { this.users = users; }
+    public Set<Role> getRoles() { return roles; }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
 }
