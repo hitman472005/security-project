@@ -7,6 +7,10 @@ import com.example.backend_security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,21 +26,27 @@ public class TokenService {
         this.userRepository = userRepository;
     }
 
-    // Crear token para un usuario
-    public Token createToken(Long userId, Token token) throws Exception {
+    // ✅ 1️⃣ Crear un token nuevo para un usuario
+    public Token createToken(Long userId, String jwt) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception("User not found"));
 
+        Token token = new Token();
         token.setUser(user);
+        token.setToken(jwt);
+        LocalDateTime expirationDateLocal = LocalDateTime.now().plusDays(7);
+        token.setExpirationDate(expirationDateLocal);
+        token.setValid("ACTIVO");
+        token.setCreationDate(LocalDateTime.now());
         return tokenRepository.save(token);
     }
 
-    // Obtener token por ID
-    public Optional<Token> getTokenById(Long id) {
-        return tokenRepository.findById(id);
+    // ✅ 2️⃣ Buscar un token por su valor (texto JWT)
+    public Optional<Token> getTokenByValue(String jwt) {
+        return tokenRepository.findByToken(jwt);
     }
 
-    // Obtener todos los tokens de un usuario
+    // ✅ 3️⃣ Listar todos los tokens de un usuario
     public List<Token> getTokensByUser(Long userId) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception("User not found"));
@@ -44,10 +54,18 @@ public class TokenService {
         return tokenRepository.findByUser(user);
     }
 
-    // Eliminar token
-    public void deleteToken(Long id) throws Exception {
-        Token token = tokenRepository.findById(id)
+    // ✅ 4️⃣ Invalidar (marcar como no válido) un token al cerrar sesión
+    public void invalidateToken(String jwt) throws Exception {
+        Token token = tokenRepository.findByToken(jwt)
                 .orElseThrow(() -> new Exception("Token not found"));
-        tokenRepository.delete(token);
+
+        token.setValid("INACTIVO");
+        tokenRepository.save(token);
     }
+
+
+
+
+
+
 }

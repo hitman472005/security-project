@@ -2,6 +2,7 @@ package com.example.backend_security.entity;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,10 +43,10 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    private Timestamp lastLogin;
+    private LocalDateTime lastLogin;
 
-    @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp creationDate;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens = new HashSet<>();
@@ -55,7 +56,7 @@ public class User {
 
     public User() {}
 
-    public User(Long id, String name, String username, String email, String password, String provider, String photoUrl, byte[] profilePhoto, Timestamp lastLogin, Timestamp creationDate) {
+    public User(Long id, String name, String username, String email, String password, String provider, String photoUrl, byte[] profilePhoto, LocalDateTime lastLogin, LocalDateTime creationDate) {
         this.id = id;
         this.name = name;
         this.username = username;
@@ -99,11 +100,11 @@ public class User {
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
-    public Timestamp getLastLogin() { return lastLogin; }
-    public void setLastLogin(Timestamp lastLogin) { this.lastLogin = lastLogin; }
+    public LocalDateTime getLastLogin() { return lastLogin; }
+    public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
 
-    public Timestamp getCreationDate() { return creationDate; }
-    public void setCreationDate(Timestamp creationDate) { this.creationDate = creationDate; }
+    public LocalDateTime getCreationDate() { return creationDate; }
+    public void setCreationDate(LocalDateTime creationDate) { this.creationDate = creationDate; }
 
     public Set<Token> getTokens() { return tokens; }
     public void setTokens(Set<Token> tokens) { this.tokens = tokens; }

@@ -1,7 +1,8 @@
 package com.example.backend_security.entity;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tokens")
@@ -19,17 +20,18 @@ public class Token {
     private String token;
 
     @Column(name = "expiration_date", nullable = false)
-    private Timestamp expirationDate;
+    private LocalDateTime expirationDate;
 
     @Column(length = 512, nullable = false)
     private String valid;
 
-    @Column(name = "creation_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp creationDate;
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
-    public Token() {}
+    public Token() {
+    }
 
-    public Token(Long id, User user, String token, Timestamp expirationDate, String valid, Timestamp creationDate) {
+    public Token(Long id, User user, String token, LocalDateTime expirationDate, String valid, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.token = token;
@@ -38,22 +40,64 @@ public class Token {
         this.creationDate = creationDate;
     }
 
+    @Override
+    public String toString() {
+        return "Token{" +
+                "id=" + id +
+                ", user=" + user +
+                ", token='" + token + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", valid='" + valid + '\'' +
+                ", creationDate=" + creationDate +
+                '}';
+    }
+
     // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
+    public User getUser() {
+        return user;
+    }
 
-    public Timestamp getExpirationDate() { return expirationDate; }
-    public void setExpirationDate(Timestamp expirationDate) { this.expirationDate = expirationDate; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public String getValid() { return valid; }
-    public void setValid(String valid) { this.valid = valid; }
+    public String getToken() {
+        return token;
+    }
 
-    public Timestamp getCreationDate() { return creationDate; }
-    public void setCreationDate(Timestamp creationDate) { this.creationDate = creationDate; }
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public String getValid() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid = valid;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 }

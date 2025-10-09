@@ -37,12 +37,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas (auth y Swagger)
-                        .requestMatchers("/auth/google/**").permitAll()
+                        // Endpoints públicos
+                        .requestMatchers("/auth/google/**","/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                        // Rutas protegidas por roles
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        // Endpoints protegidos por roles
+                        .requestMatchers("/role/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                         // Cualquier otra ruta requiere autenticación
@@ -53,6 +53,5 @@ public class SecurityConfig {
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 
 }

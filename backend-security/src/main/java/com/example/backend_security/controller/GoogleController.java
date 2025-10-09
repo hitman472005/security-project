@@ -2,15 +2,16 @@ package com.example.backend_security.controller;
 
 import com.example.backend_security.dto.GoogleResponse;
 import com.example.backend_security.entity.User;
-import com.example.backend_security.security.CustomUserDetailsService;
 import com.example.backend_security.security.JwtUtil;
 import com.example.backend_security.service.GoogleService;
+import com.example.backend_security.service.TokenService;
 import com.example.backend_security.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 @RestController
@@ -22,14 +23,13 @@ public class GoogleController {
     private final GoogleService googleService;
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final TokenService tokenService;
 
-
-    public GoogleController( GoogleService googleService, UserService userService, JwtUtil jwtUtil) {
-
+    public GoogleController(GoogleService googleService, UserService userService, JwtUtil jwtUtil, TokenService tokenService) {
         this.googleService = googleService;
         this.userService = userService;
-
         this.jwtUtil = jwtUtil;
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/loginWithGoogle")
@@ -49,6 +49,9 @@ public class GoogleController {
             User user = userService.registerOrUpdateOAuthUser(userInfo);
             // 4️⃣ Generar JWT propio
             String jwt = jwtUtil.generateToken(user);
+            // 5️⃣ Guardar token en base de datos
+            tokenService.createToken(user.getId(), jwt);
+
             System.out.println(jwt);
             return ResponseEntity.ok(Map.of(
                     "token", jwt,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { LoginAuth } from '../../models/loginAuth';
 
@@ -20,12 +20,19 @@ export class GoogleService {
     );
   }
 
-  logout() {
-    localStorage.removeItem('jwt');
-  }
 
+  // =========================
+  // Obtener token
+  // =========================
   get token(): string | null {
     return localStorage.getItem('jwt');
+  }
+
+  // =========================
+  // Guardar token
+  // =========================
+  setToken(token: string) {
+    localStorage.setItem('jwt', token);
   }
 
   login() {
@@ -44,6 +51,32 @@ export class GoogleService {
       code,
     });
   }
+
+  // =========================
+  // Logout: elimina token local y llama al backend
+  // =========================
+  logout(): Observable<any> {
+  const token = localStorage.getItem('jwt');
+
+  if (!token) {
+    return of({ message: 'No token to logout' });
+  }
+
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
+
+  // 👇 Cambia responseType a 'text' para evitar el error
+  return this.http.post(`${this.backendUrl}/auth/logout`, {}, { headers, responseType: 'text' as 'json' }).pipe(
+    tap(response => {
+  
+      localStorage.removeItem('jwt');
+    }),
+    catchError(error => {
+      return of(error);
+    })
+  );
+}
 
 
 }

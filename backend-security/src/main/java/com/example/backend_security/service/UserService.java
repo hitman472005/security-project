@@ -9,6 +9,8 @@ import com.example.backend_security.repository.UserStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,10 +47,14 @@ public class UserService {
 
         user.setRole(role);
         user.setStatus(status);
+        user.setCreationDate(LocalDateTime.now());
 
         return userRepository.save(user);
     }
 
+    // =========================
+    // Crear un google
+    // =========================
     public User registerOrUpdateOAuthUser(Map<String, Object> userInfo) throws Exception {
         String email = (String) userInfo.get("email");
         String name = (String) userInfo.get("name");
@@ -68,6 +74,8 @@ public class UserService {
                 newUser.setName(name);
                 newUser.setPhotoUrl(photoUrl);
                 newUser.setProvider("google");
+                newUser.setCreationDate(LocalDateTime.now());
+
 
                 // Asignar Role por defecto
                 Role defaultRole = roleRepository.findByName("ROLE_USER")
@@ -86,9 +94,6 @@ public class UserService {
         });
     }
 
-    // =========================
-    // Crear un google
-    // =========================
 
     // =========================
     // Buscar usuario por ID
