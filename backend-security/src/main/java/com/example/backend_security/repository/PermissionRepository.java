@@ -3,5 +3,8 @@ package com.example.backend_security.repository;
 import com.example.backend_security.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PermissionsRepository extends JpaRepository<Permission,Long> {
+import java.util.Optional;
+
+public interface PermissionRepository extends JpaRepository<Permission,Long> {
+    Optional<Permission> findByCode(String code);
 }

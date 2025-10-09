@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { GoogleService } from '../../../core/services/google.service';
 import { AlertService } from '../../../core/services/alert.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class AuthCallback {
   constructor(
     private route: ActivatedRoute,
     private alertService: AlertService,
-    private authService: AuthService,
+    private authService: GoogleService,
     private router: Router
   ) { }
 

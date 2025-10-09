@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertService } from '../../../core/services/alert.service';
 import { Registrar } from '../../../models/registrar';
-import { AuthService } from '../../../core/services/auth.service';
+import {  GoogleService } from '../../../core/services/google.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,7 +21,7 @@ export class Register implements OnInit {
 
   constructor(
     private fb: FormBuilder, private router: Router,
-    private authService: AuthService,
+    private authService: GoogleService,
     private alertService: AlertService
   ) { }
 

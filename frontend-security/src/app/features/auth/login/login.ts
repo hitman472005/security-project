@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
+import { GoogleService } from '../../../core/services/google.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../core/services/alert.service';
@@ -17,7 +17,7 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService,
+    private authService: GoogleService,
     private alertService: AlertService
   ) { }
 

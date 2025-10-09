@@ -1,8 +1,6 @@
 package com.example.backend_security.entity;
 
 import jakarta.persistence.*;
-
-import java.security.Permission;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,16 +14,12 @@ public class Role {
 
     @Column(length = 50, nullable = false, unique = true)
     private String name;
-
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 50, nullable = false, unique = true)
     private String description;
 
-    @OneToMany(mappedBy = "role")
-    private Set<User> users = new HashSet<>();
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "roles_permissions",
+            name = "role_permissions",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
@@ -33,10 +27,9 @@ public class Role {
 
     public Role() {}
 
-    public Role(Long id, String name, String description) {
+    public Role(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.description = description;
     }
 
     // Getters y Setters
@@ -46,11 +39,13 @@ public class Role {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public Set<User> getUsers() { return users; }
-    public void setUsers(Set<User> users) { this.users = users; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Set<Permission> getPermissions() { return permissions; }
     public void setPermissions(Set<Permission> permissions) { this.permissions = permissions; }
