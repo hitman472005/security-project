@@ -1,4 +1,4 @@
 package com.example.backend_security.repository;
 
-public interface SessionsRepository {
+public interface SessionRepository {
 }
