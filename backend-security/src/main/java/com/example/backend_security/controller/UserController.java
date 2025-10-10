@@ -35,8 +35,14 @@ public class UserController {
     // =========================
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody RegisterRequest request) {
-        User newUser = userService.createUser(request);
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        try{
+            User newUser = userService.createUser(request);
+            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
     }
     // =========================
     // Buscar usuario por ID

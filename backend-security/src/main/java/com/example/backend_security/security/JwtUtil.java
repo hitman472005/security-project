@@ -33,6 +33,7 @@ public class JwtUtil {
     // ===============================
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
+        System.out.println(user.getUsername());
         return createToken(claims, user.getUsername());
     }
 
@@ -51,6 +52,8 @@ public class JwtUtil {
         Date issuedAt = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         Date expiration = Date.from(now.plusSeconds(jwtExpiration / 1000).atZone(ZoneId.systemDefault()).toInstant());
 
+        System.out.println("🟢 Generando token para: " + subject);
+        System.out.println("🟢 Clave secreta: " + SECRET_KEY);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)

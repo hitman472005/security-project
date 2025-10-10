@@ -38,12 +38,12 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
-                        .requestMatchers("/auth/google/**","/auth/**").permitAll()
+                        .requestMatchers("/auth/google/**","/auth/**","/users").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
                         // Endpoints protegidos por roles
                         .requestMatchers("/role/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/users/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                         // Cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()

@@ -4,6 +4,7 @@ import { AlertService } from '../../../core/services/alert.service';
 import { Registrar } from '../../../models/registrar';
 import {  GoogleService } from '../../../core/services/google.service';
 import { Router } from '@angular/router';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +21,7 @@ export class Register implements OnInit {
   formulario!: FormGroup;
 
   constructor(
+    private userService:UserService,
     private fb: FormBuilder, private router: Router,
     private authService: GoogleService,
     private alertService: AlertService
@@ -38,22 +40,44 @@ export class Register implements OnInit {
     });
   }
 
-  operar() {
-    if (this.formulario.valid) {
-      const usuario: Registrar = {
-        name: this.formulario.get('name')?.value,
-        username: this.formulario.get('username')?.value,
-        email: this.formulario.get('email')?.value,
-        password: this.formulario.get('password')?.value
-      };
-      console.log(usuario)
-      this.alertService.success('Registro exitoso', `¡Bienvenido ${usuario.name}!`);
-    } else {
-      console.log("hola")
-      this.alertService.warning('Campos incompletos', 'Por favor, completa todos los campos requeridos.');
-      this.formulario.markAllAsTouched();
-    }
+ operar() {
+  if (this.formulario.valid) {
+    const usuario: Registrar = {
+      name: this.formulario.get('name')?.value.trim(),
+      username: this.formulario.get('username')?.value.trim(),
+      email: this.formulario.get('email')?.value.trim(),
+      password: this.formulario.get('password')?.value
+    };
+
+    console.log('📦 Datos del usuario a registrar:', usuario);
+
+    this.userService.createUser(usuario).subscribe({
+      next: (response) => {
+        console.log('✅ Usuario registrado:', response);
+        this.alertService.success('Registro exitoso', `¡Bienvenido ${usuario.name}!`);
+        this.formulario.reset(); // Limpia el formulario
+        // Opcional: redirigir al login
+         this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('❌ Error al registrar usuario:', err);
+
+        if (err.error?.message?.includes('Username already exists')) {
+          this.alertService.error('Error', 'El nombre de usuario ya existe.');
+        } else if (err.error?.message?.includes('Email already exists')) {
+          this.alertService.error('Error', 'El correo electrónico ya está registrado.');
+        } else {
+          this.alertService.error('Error', 'Ocurrió un error al registrar el usuario.');
+        }
+      }
+    });
+
+  } else {
+    this.alertService.warning('Campos incompletos', 'Por favor, completa todos los campos requeridos.');
+    this.formulario.markAllAsTouched();
   }
+}
+
 
   registrarConGoogle() {
     this.authService.login();

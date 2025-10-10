@@ -1,6 +1,8 @@
 package com.example.backend_security.service;
 
+import com.example.backend_security.dto.LoginRequest;
 import com.example.backend_security.dto.RegisterRequest;
+import com.example.backend_security.dto.TokenResponse;
 import com.example.backend_security.entity.Role;
 import com.example.backend_security.entity.User;
 import com.example.backend_security.entity.UserStatus;
@@ -9,11 +11,18 @@ import com.example.backend_security.exception.UserAlreadyExistsException;
 import com.example.backend_security.repository.RoleRepository;
 import com.example.backend_security.repository.UserRepository;
 import com.example.backend_security.repository.UserStatusRepository;
+import com.example.backend_security.security.CustomUserDetailsService;
+import com.example.backend_security.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -26,13 +35,18 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final UserStatusRepository statusRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtils;
+    private final  CustomUserDetailsService userDetailsService;
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserStatusRepository statusRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserStatusRepository statusRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtils, CustomUserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.statusRepository = statusRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
     }
 
     // =========================
@@ -168,4 +182,59 @@ public class UserService {
     }
 
 
+    // =========================
+    // 🔹 LOGIN (Generar token)
+    // =========================
+    public TokenResponse login(LoginRequest loginRequest) {
+        String identificador = loginRequest.getLogin();
+        String password = loginRequest.getPassword();
+
+        try {
+            // Autenticación con Spring Security
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(identificador, password)
+            );
+
+            // Buscar usuario por username o email
+            User user = userRepository.findByUsername(identificador)
+                    .orElseGet(() -> userRepository.findByEmail(identificador)
+                            .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + identificador)));
+
+            // 🔹 Generar token
+            String token = jwtUtils.generateToken(user);
+
+            System.out.println("🟢 Token generado: " + token);
+
+            return new TokenResponse(token);
+
+        } catch (BadCredentialsException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Usuario o contraseña incorrectos", ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Error al iniciar sesión", ex);
+        }
+    }
+
+    public void validarIdentificador(String identificador) {
+        boolean existe;
+        if (esCorreo(identificador)) {
+            existe = userRepository.existsByEmail(identificador);
+        } else {
+            existe = userRepository.existsByUsername(identificador);
+        }
+        if (!existe) {
+            throw new IllegalArgumentException("Usuario no encontrado");
+        }
+    }
+    private boolean esCorreo(String valor) {
+        return valor != null && valor.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
+    public User actualUsuario(Principal principal) {
+        if (principal == null || principal.getName() == null) {
+            throw new RuntimeException("Usuario no autorizado");
+        }
+        User usuario = (User) this.userDetailsService.loadUserByUsername(principal.getName());
+        return usuario;
+    }
 }
