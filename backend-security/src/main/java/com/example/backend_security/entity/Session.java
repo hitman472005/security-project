@@ -1,7 +1,9 @@
 package com.example.backend_security.entity;
 
 import jakarta.persistence.*;
+
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sessions")
@@ -21,17 +23,17 @@ public class Session {
     @Column(columnDefinition = "TEXT")
     private String userAgent;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp start;
+    private LocalDateTime start;
 
-    private Timestamp end;
+    private LocalDateTime end;
 
     @Column(length = 512, nullable = false)
     private String active;
 
-    public Session() {}
+    public Session() {
+    }
 
-    public Session(Long id, User user, String ip, String userAgent, Timestamp start, Timestamp end, String active) {
+    public Session(Long id, User user, String ip, String userAgent, LocalDateTime start, LocalDateTime end, String active) {
         this.id = id;
         this.user = user;
         this.ip = ip;
@@ -42,24 +44,59 @@ public class Session {
     }
 
     // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getIp() { return ip; }
-    public void setIp(String ip) { this.ip = ip; }
+    public User getUser() {
+        return user;
+    }
 
-    public String getUserAgent() { return userAgent; }
-    public void setUserAgent(String userAgent) { this.userAgent = userAgent; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public Timestamp getStart() { return start; }
-    public void setStart(Timestamp start) { this.start = start; }
+    public String getIp() {
+        return ip;
+    }
 
-    public Timestamp getEnd() { return end; }
-    public void setEnd(Timestamp end) { this.end = end; }
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
-    public String getActive() { return active; }
-    public void setActive(String active) { this.active = active; }
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
+    }
 }

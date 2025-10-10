@@ -18,7 +18,7 @@ public interface TokenRepository extends JpaRepository<Token,Long> {
     List<Token> findByUserAndValidTrue(User user);
 
     // Listar tokens inválidos (valid = "false")
-    List<Token> findByValidFalse();
+    List<Token> findByValid(String valid);
 
     // Eliminar todos los tokens inválidos
     void deleteByValidFalse();

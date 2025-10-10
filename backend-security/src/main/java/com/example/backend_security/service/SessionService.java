@@ -44,6 +44,11 @@ public class SessionService {
         return sessionRepository.findByUser(user);
     }
 
+    // Obtener todas las sesiones
+    public List<Session> getAllSessions() {
+        return sessionRepository.findAll();
+    }
+
     // Eliminar sesión
     public void deleteSession(Long id) throws Exception {
         Session session = sessionRepository.findById(id)

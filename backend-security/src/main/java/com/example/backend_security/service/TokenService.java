@@ -5,6 +5,7 @@ import com.example.backend_security.entity.User;
 import com.example.backend_security.repository.TokenRepository;
 import com.example.backend_security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -41,12 +42,8 @@ public class TokenService {
         return tokenRepository.save(token);
     }
 
-    // ✅ 2️⃣ Buscar un token por su valor (texto JWT)
-    public Optional<Token> getTokenByValue(String jwt) {
-        return tokenRepository.findByToken(jwt);
-    }
 
-    // ✅ 3️⃣ Listar todos los tokens de un usuario
+    // ✅ 3⃣ Listar todos los tokens de un usuario
     public List<Token> getTokensByUser(Long userId) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception("User not found"));
@@ -63,9 +60,20 @@ public class TokenService {
         tokenRepository.save(token);
     }
 
+    // Obtener tokens inactivos
+    public List<Token> getInactiveTokens() {
+        return tokenRepository.findByValid("INACTIVO");
+    }
 
-
-
+    // 🗓 Borrar tokens inactivos cada domingo a medianoche
+    @Scheduled(cron = "0 0 0 ? * SUN") // segundos, minutos, hora, día del mes, mes, día de la semana
+    public void deleteInactiveTokensWeekly() {
+        List<Token> inactiveTokens = getInactiveTokens();
+        if (!inactiveTokens.isEmpty()) {
+            tokenRepository.deleteAll(inactiveTokens);
+            System.out.println("✅ Tokens inactivos eliminados: " + inactiveTokens.size());
+        }
+    }
 
 
 }

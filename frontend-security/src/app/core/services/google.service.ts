@@ -56,27 +56,27 @@ export class GoogleService {
   // Logout: elimina token local y llama al backend
   // =========================
   logout(): Observable<any> {
-  const token = localStorage.getItem('jwt');
+    const token = localStorage.getItem('jwt');
 
-  if (!token) {
-    return of({ message: 'No token to logout' });
+    if (!token) {
+      return of({ message: 'No token to logout' });
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // 👇 Cambia responseType a 'text' para evitar el error
+    return this.http.post(`${this.backendUrl}/auth/logout`, {}, { headers, responseType: 'text' as 'json' }).pipe(
+      tap(response => {
+
+        localStorage.removeItem('jwt');
+      }),
+      catchError(error => {
+        return of(error);
+      })
+    );
   }
-
-  const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}`
-  });
-
-  // 👇 Cambia responseType a 'text' para evitar el error
-  return this.http.post(`${this.backendUrl}/auth/logout`, {}, { headers, responseType: 'text' as 'json' }).pipe(
-    tap(response => {
-  
-      localStorage.removeItem('jwt');
-    }),
-    catchError(error => {
-      return of(error);
-    })
-  );
-}
 
 
 }
