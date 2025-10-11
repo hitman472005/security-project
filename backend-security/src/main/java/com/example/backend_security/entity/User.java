@@ -1,5 +1,6 @@
 package com.example.backend_security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -37,10 +38,12 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "status_id")
+    @JsonIgnore  // Ignorar la relación para evitar ciclo
     private UserStatus status;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+
     private Role role;
 
     private LocalDateTime lastLogin;
@@ -49,9 +52,11 @@ public class User {
     private LocalDateTime creationDate;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore  // Ignorar la relación para evitar ciclo
     private Set<Token> tokens = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore  // Ignorar la relación para evitar ciclo
     private Set<Session> sessions = new HashSet<>();
 
     public User() {}

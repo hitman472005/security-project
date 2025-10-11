@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { LoginAuth } from '../../models/loginAuth';
 
@@ -21,19 +21,6 @@ export class GoogleService {
   }
 
 
-  // =========================
-  // Obtener token
-  // =========================
-  get token(): string | null {
-    return localStorage.getItem('jwt');
-  }
-
-  // =========================
-  // Guardar token
-  // =========================
-  setToken(token: string) {
-    localStorage.setItem('jwt', token);
-  }
 
   login() {
     this.http.get<{ url: string }>(`${this.backendUrl}/auth/google/login-url`).subscribe({
@@ -52,12 +39,42 @@ export class GoogleService {
     });
   }
 
+  // Método para generar el token
+  public generateToken(loginData: any) {
+    return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
+  }
+  public getCurrentUser() {
+    const token = localStorage.getItem('jwt');
+
+    if (!token) {
+      return throwError(() => new Error('No hay token disponible'));
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`${this.backendUrl}/auth/actual-usuario`, { headers });
+  }
+
+
+
+  // =========================
+  // Obtener token
+  // =========================
+  get token(): string | null {
+    return localStorage.getItem('jwt');
+  }
+
+  // =========================
+  // Guardar token
+  // =========================
+  setToken(token: string) {
+    localStorage.setItem('jwt', token);
+  }
   // =========================
   // Logout: elimina token local y llama al backend
   // =========================
   logout(): Observable<any> {
     const token = localStorage.getItem('jwt');
-
+    localStorage.removeItem('jwt');
     if (!token) {
       return of({ message: 'No token to logout' });
     }

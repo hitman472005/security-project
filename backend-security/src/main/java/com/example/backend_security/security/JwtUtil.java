@@ -5,10 +5,13 @@ import com.example.backend_security.entity.User;
 
 import io.jsonwebtoken.*;
 
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -27,6 +30,10 @@ public class JwtUtil {
     @Value("${jwt.expirationMs:${JWT_EXPIRATION}}")
     private long jwtExpiration;
 
+    // 🔐 Método para obtener la clave segura
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    }
 
     // ===============================
     // 🔹 2️⃣ Generar token JWT
@@ -59,7 +66,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiration)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // <── Aquí se usa
                 .compact();
     }
 
@@ -81,8 +88,9 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey()) // 👈 También aquí
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }

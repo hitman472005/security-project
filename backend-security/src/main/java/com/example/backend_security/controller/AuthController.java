@@ -67,6 +67,7 @@ public class AuthController {
         try {
             return ResponseEntity.ok(usuarioService.actualUsuario(principal));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("ERROR DE USUARIO ACTUAL");
         }

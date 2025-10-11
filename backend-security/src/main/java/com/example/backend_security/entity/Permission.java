@@ -19,8 +19,7 @@ public class Permission {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany(mappedBy = "permissions")
-    private Set<Role> roles = new HashSet<>();
+
 
     public Permission() {}
 
@@ -40,6 +39,5 @@ public class Permission {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Set<Role> getRoles() { return roles; }
-    public void setRoles(Set<Role> roles) { this.roles = roles; }
+
 }

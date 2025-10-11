@@ -82,4 +82,55 @@ public class UserController {
         User user = userService.updateUser(userId, updatedUser);
         return ResponseEntity.ok(user);
     }
+
+    @GetMapping("/role-user")
+    public List<User> listUsersByRole() {
+        return userService.getUsersByRoleUser();
+    }
+
+    @GetMapping("/role-admin")
+    public List<User> listUsersByRoleAdmin() {
+        return userService.getUsersByRoleAdmin();
+    }
+    // ------------------ ROLE_USER ------------------
+    @GetMapping("/role-user/active")
+    public List<User> listActiveUsersByRoleUser() {
+        return userService.getActiveUsersByRoleUser();
+    }
+
+    @GetMapping("/role-user/suspend")
+    public List<User> listSuspendedUsersByRoleUser() {
+        return userService.getSuspendedUsersByRoleUser();
+    }
+
+    @GetMapping("/role-user/inactive")
+    public List<User> listInactiveUsersByRoleUser() {
+        return userService.getInactiveUsersByRoleUser();
+    }
+
+    @GetMapping("/role-user/blocked")
+    public List<User> listBlockedUsersByRoleUser() {
+        return userService.getBlockedUsersByRoleUser();
+    }
+
+    // ------------------ ROLE_ADMIN ------------------
+    @GetMapping("/role-admin/active")
+    public List<User> listActiveUsersByRoleAdmin() {
+        return userService.getActiveUsersByRoleAdmin();
+    }
+
+    @GetMapping("/role-admin/suspend")
+    public List<User> listSuspendedUsersByRoleAdmin() {
+        return userService.getSuspendedUsersByRoleAdmin();
+    }
+
+    @GetMapping("/role-admin/inactive")
+    public List<User> listInactiveUsersByRoleAdmin() {
+        return userService.getInactiveUsersByRoleAdmin();
+    }
+
+    @GetMapping("/role-admin/blocked")
+    public List<User> listBlockedUsersByRoleAdmin() {
+        return userService.getBlockedUsersByRoleAdmin();
+    }
 }

@@ -37,16 +37,18 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtils;
-    private final  CustomUserDetailsService userDetailsService;
+    private final TokenService tokenService;
+
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserStatusRepository statusRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtils, CustomUserDetailsService userDetailsService) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserStatusRepository statusRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtils, TokenService tokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.statusRepository = statusRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
-        this.userDetailsService = userDetailsService;
+        this.tokenService = tokenService;
+
     }
 
     // =========================
@@ -202,7 +204,7 @@ public class UserService {
 
             // 🔹 Generar token
             String token = jwtUtils.generateToken(user);
-
+            tokenService.createToken(user.getId(), token);
             System.out.println("🟢 Token generado: " + token);
 
             return new TokenResponse(token);
@@ -227,14 +229,61 @@ public class UserService {
             throw new IllegalArgumentException("Usuario no encontrado");
         }
     }
+
     private boolean esCorreo(String valor) {
         return valor != null && valor.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
     }
+
     public User actualUsuario(Principal principal) {
         if (principal == null || principal.getName() == null) {
             throw new RuntimeException("Usuario no autorizado");
         }
-        User usuario = (User) this.userDetailsService.loadUserByUsername(principal.getName());
-        return usuario;
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseGet(() -> userRepository.findByEmail(principal.getName())
+                        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + principal.getName())));
+
+        return user;
+    }
+
+    public List<User> getUsersByRoleUser() {
+        return userRepository.findByRole_Name("ROLE_USER");
+    }
+
+    public List<User> getUsersByRoleAdmin() {
+        return userRepository.findByRole_Name("ROLE_ADMIN");
+    }
+
+    // ------------------ ROLE_USER ------------------
+    public List<User> getActiveUsersByRoleUser() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_USER", "ACTIVE");
+    }
+
+    public List<User> getSuspendedUsersByRoleUser() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_USER", "SUSPEND");
+    }
+
+    public List<User> getInactiveUsersByRoleUser() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_USER", "INACTIVE");
+    }
+
+    public List<User> getBlockedUsersByRoleUser() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_USER", "BLOCKED");
+    }
+
+    // ------------------ ROLE_ADMIN ------------------
+    public List<User> getActiveUsersByRoleAdmin() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_ADMIN", "ACTIVE");
+    }
+
+    public List<User> getSuspendedUsersByRoleAdmin() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_ADMIN", "SUSPEND");
+    }
+
+    public List<User> getInactiveUsersByRoleAdmin() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_ADMIN", "INACTIVE");
+    }
+
+    public List<User> getBlockedUsersByRoleAdmin() {
+        return userRepository.findByRole_NameAndStatus_Code("ROLE_ADMIN", "BLOCKED");
     }
 }

@@ -18,8 +18,6 @@ public class UserStatus {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "status")
-    private Set<User> users = new HashSet<>();
 
     public UserStatus() {}
 
@@ -39,6 +37,5 @@ public class UserStatus {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Set<User> getUsers() { return users; }
-    public void setUsers(Set<User> users) { this.users = users; }
+
 }

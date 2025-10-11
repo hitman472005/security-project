@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+
 import { Observable } from 'rxjs';
 import { GoogleService } from '../services/google.service';
 
@@ -10,7 +10,7 @@ import { GoogleService } from '../services/google.service';
 })
 export class UserGuard implements CanActivate {
 
-    constructor(private googleService: GoogleService, private router: Router) {
+    constructor(private authService: GoogleService, private router: Router) {
 
     }
 
@@ -19,7 +19,7 @@ export class UserGuard implements CanActivate {
         state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
 
-const token = this.googleService.token;
+const token = this.authService.token;
 if (token) {
   return true; // usuario logueado → permite acceso
 } else {
