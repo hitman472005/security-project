@@ -235,9 +235,11 @@ public class UserService {
     }
 
     public User actualUsuario(Principal principal) {
+        System.out.println(principal);
         if (principal == null || principal.getName() == null) {
             throw new RuntimeException("Usuario no autorizado");
         }
+
         User user = userRepository.findByUsername(principal.getName())
                 .orElseGet(() -> userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + principal.getName())));

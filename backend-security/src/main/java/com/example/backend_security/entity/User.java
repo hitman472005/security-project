@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +39,6 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "status_id")
-    @JsonIgnore  // Ignorar la relación para evitar ciclo
     private UserStatus status;
 
     @ManyToOne
@@ -116,4 +116,22 @@ public class User {
 
     public Set<Session> getSessions() { return sessions; }
     public void setSessions(Set<Session> sessions) { this.sessions = sessions; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", provider='" + provider + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+
+                ", status=" + status +
+                ", role=" + role +
+                ", lastLogin=" + lastLogin +
+                ", creationDate=" + creationDate +
+                '}';
+    }
 }

@@ -65,6 +65,7 @@ public class AuthController {
     @GetMapping("/actual-usuario")
     public ResponseEntity<?> obtenerUsuarioActual(Principal principal) {
         try {
+            System.out.println(principal);
             return ResponseEntity.ok(usuarioService.actualUsuario(principal));
         } catch (Exception e) {
             e.printStackTrace();

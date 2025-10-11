@@ -40,9 +40,23 @@ public class JwtUtil {
     // ===============================
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        System.out.println(user.getUsername());
-        return createToken(claims, user.getUsername());
+
+        // Logs para depurar
+        System.out.println("=== GENERATE TOKEN ===");
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Email: " + user.getEmail());
+
+        // Usa el username si existe, de lo contrario el email
+        String subject = (user.getUsername() != null && !user.getUsername().isEmpty())
+                ? user.getUsername()
+                : user.getEmail();
+
+        System.out.println("Subject usado para el token: " + subject);
+        System.out.println("========================");
+
+        return createToken(claims, subject);
     }
+
 
     /*
         private String createToken(Map<String, Object> claims, String subject) {

@@ -25,39 +25,56 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
         String requestTokenHeader = request.getHeader("Authorization");
-        String username = null;
         String jwtToken = null;
+        String usernameOrEmail = null;
+
+        // 🔹 1️⃣ Verificar encabezado Authorization
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
-
             try {
-                username = this.jwtUtil.extractUsername(jwtToken);
+                usernameOrEmail = this.jwtUtil.extractUsername(jwtToken);
+                System.out.println("🟢 Token recibido para usuario/email: " + usernameOrEmail);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println("❌ Error al extraer username/email del token: " + e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("text/plain");
-                response.getWriter().write("TOKEN EXPIRADO");
-                return; // Finalizar el filtro aquí
+                response.getWriter().write("TOKEN INVÁLIDO O EXPIRADO");
+                return;
             }
-
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
+        // 🔹 2️⃣ Validar que no haya autenticación previa
+        if (usernameOrEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            try {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(usernameOrEmail);
+                System.out.println("👤 Usuario cargado: " + userDetails.getUsername());
 
+                // 🔹 3️⃣ Validar token JWT
+                if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities()
+                            );
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    System.out.println("❌ Token no válido para el usuario: " + usernameOrEmail);
+                }
+            } catch (Exception ex) {
+                System.err.println("⚠️ Error cargando usuario o validando token: " + ex.getMessage());
+            }
         }
+
+        // 🔹 4️⃣ Continuar la cadena de filtros
         filterChain.doFilter(request, response);
     }
-
 }

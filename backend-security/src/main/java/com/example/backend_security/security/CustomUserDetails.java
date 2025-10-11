@@ -16,7 +16,7 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-    // Roles / Authorities
+    // ✅ Roles / Authorities
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (user.getRole() != null) {
@@ -27,27 +27,33 @@ public class CustomUserDetails implements UserDetails {
         return Collections.emptyList();
     }
 
+    // ✅ Password (puede ser null si viene de Google)
     @Override
     public String getPassword() {
         return user.getPassword();
     }
 
+    // ✅ Devuelve username o email según corresponda
     @Override
     public String getUsername() {
-        return user.getUsername();
+        // Si el usuario fue creado con Google no tendrá username
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+            return user.getUsername();
+        }
+        // Usa email como identificador alternativo
+        return user.getEmail();
     }
 
-    // La cuenta nunca expira en este ejemplo
+    // ✅ Cuenta nunca expira (puedes ajustar si quieres)
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    // Bloqueo basado en el status del usuario
+    // ✅ Bloqueo basado en el status del usuario
     @Override
     public boolean isAccountNonLocked() {
         if (user.getStatus() != null) {
-            // Por ejemplo, si el status es "BLOCKED", se bloquea la cuenta
             return !"BLOCKED".equalsIgnoreCase(user.getStatus().getCode());
         }
         return true;
@@ -58,7 +64,7 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    // Activo solo si el status no es bloqueado
+    // ✅ Activo solo si no está bloqueado
     @Override
     public boolean isEnabled() {
         if (user.getStatus() != null) {
@@ -67,8 +73,18 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    // Getter para acceder al usuario real si se necesita
+    // ✅ Getter para acceder al usuario real si se necesita
     public User getUser() {
         return user;
+    }
+
+    // ✅ Override de toString (útil para depuración)
+    @Override
+    public String toString() {
+        return "CustomUserDetails{" +
+                "username='" + getUsername() + '\'' +
+                ", role=" + (user.getRole() != null ? user.getRole().getName() : "sin rol") +
+                ", status=" + (user.getStatus() != null ? user.getStatus().getCode() : "N/A") +
+                '}';
     }
 }

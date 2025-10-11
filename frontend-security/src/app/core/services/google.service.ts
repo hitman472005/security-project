@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, Observable, of, Subject, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { LoginAuth } from '../../models/loginAuth';
 
@@ -8,6 +8,8 @@ import { LoginAuth } from '../../models/loginAuth';
   providedIn: 'root'
 })
 export class GoogleService {
+  public loginStatusSubjec = new Subject<boolean>();
+
   private backendUrl = environment.backendUrl;
 
   constructor(private http: HttpClient) { }
@@ -25,6 +27,7 @@ export class GoogleService {
   login() {
     this.http.get<{ url: string }>(`${this.backendUrl}/auth/google/login-url`).subscribe({
       next: (response) => {
+        console.log(response)
         window.location.href = response.url; // Redirige a Google
       },
       error: (err) => {
@@ -40,16 +43,16 @@ export class GoogleService {
   }
 
   // Método para generar el token
-  public generateToken(loginData: any) {
+   generateToken(loginData: any) {
     return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
   }
-  public getCurrentUser() {
+   getCurrentUser() {
     const token = localStorage.getItem('jwt');
 
     if (!token) {
       return throwError(() => new Error('No hay token disponible'));
     }
-
+console.log(token)
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`${this.backendUrl}/auth/actual-usuario`, { headers });
   }

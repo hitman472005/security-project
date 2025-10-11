@@ -13,14 +13,15 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   // Método para generar el token
-  public generateToken(loginData: any) {
+   generateToken(loginData: any) {
     return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
   }
-  public getCurrentUser() {
+   getCurrentUser() {
     const token = localStorage.getItem('jwt');
+    console.log(token)
     if (token) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
+console.log(headers)
       return this.http.get(`${this.backendUrl}/auth/actual-usuario`, { headers });
     } else {
       // Si no tienes el token, lanza un error o maneja de otra manera

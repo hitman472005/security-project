@@ -7,6 +7,8 @@ import { Dashboard } from './features/user/dashboard/dashboard';
 import { AdminGuard } from './core/guards/admin.guard';
 import { UserGuard } from './core/guards/user.guard';
 import { NoAuthGuard } from './core/guards/noauth.guard';
+import { HomeUser } from './features/user/home-user/home-user';
+import { User } from './features/user/user/user';
 
 
 export const routes: Routes = [
@@ -22,8 +24,17 @@ export const routes: Routes = [
     { path: 'auth-callback', component: AuthCallback },
 
     // Dashboard (solo accesible si está logueado)
-    { path: 'dashboard', component: Dashboard, canActivate: [UserGuard] },
-
+    //    { path: 'dashboard', component: Dashboard, canActivate: [UserGuard] },
+    {
+        path: '',
+        component: HomeUser,
+        canActivate: [UserGuard],
+        children: [
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: 'dashboard', component: Dashboard },
+            { path: 'user', component: User }
+        ]
+    },
     // Cualquier otra ruta redirige a la principal
     { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
