@@ -14,6 +14,6 @@ this.router.navigate(['/register'])
  constructor(private router: Router) {} // Inyectamos Router
 
   iniciarSesion() {
-  //  this.router.navigate(['/login']);
+    this.router.navigate(['/login']);
   }
 }

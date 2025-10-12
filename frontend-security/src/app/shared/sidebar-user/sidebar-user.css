@@ -104,6 +104,7 @@
 
     #sidebar .side-menu li a.logout {
         color: #fff;
+        cursor: pointer;
     }
 
     #sidebar .side-menu li a.logout:hover {

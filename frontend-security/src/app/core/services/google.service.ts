@@ -43,16 +43,16 @@ export class GoogleService {
   }
 
   // Método para generar el token
-   generateToken(loginData: any) {
+  generateToken(loginData: any) {
     return this.http.post(`${this.backendUrl}/auth/generate-token`, loginData);
   }
-   getCurrentUser() {
+  getCurrentUser() {
     const token = localStorage.getItem('jwt');
 
     if (!token) {
       return throwError(() => new Error('No hay token disponible'));
     }
-console.log(token)
+    console.log(token)
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`${this.backendUrl}/auth/actual-usuario`, { headers });
   }
@@ -89,7 +89,7 @@ console.log(token)
     // 👇 Cambia responseType a 'text' para evitar el error
     return this.http.post(`${this.backendUrl}/auth/logout`, {}, { headers, responseType: 'text' as 'json' }).pipe(
       tap(response => {
-
+        localStorage.removeItem('username')
         localStorage.removeItem('jwt');
       }),
       catchError(error => {

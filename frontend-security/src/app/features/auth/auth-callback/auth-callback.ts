@@ -42,21 +42,21 @@ export class AuthCallback {
 
         // Guardar token en localStorage
         localStorage.setItem('jwt', res.token);
-  this.authService.getCurrentUser().subscribe({
-      next: (user) => {
-        console.log('👤 Usuario actual:', user);
+        this.authService.getCurrentUser().subscribe({
+          next: (user) => {
+            console.log('👤 Usuario actual:', user.username);
+            localStorage.setItem('username', user.email)
 
- 
 
-        // Redirigir al dashboard
-        this.router.navigate(['/dashboard']);
+            // Redirigir al dashboard
+            this.router.navigate(['/dashboard']);
+          },
+          error: (err) => {
+            console.error('❌ Error al obtener usuario:', err);
+            this.router.navigate(['/login']);
+          },
+        });
       },
-      error: (err) => {
-        console.error('❌ Error al obtener usuario:', err);
-        this.router.navigate(['/login']);
-      },
-    });
-  },
       error: (err) => {
         this.alertService.error('Error', 'No se pudo completar la autenticación con Google');
         this.router.navigate(['/login']);

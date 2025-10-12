@@ -2,7 +2,7 @@
     <!-- SIDEBAR -->
     <section id="sidebar" [ngClass]="status ? 'hide' : ''">
         <a routerLink="/admin" class="brand">
-            <img src="../../../../assets/img/logo.png" alt="Super Xtra Logo" class="imagen">
+            <img src="/image.png" alt="Super Xtra Logo" class="imagen">
         </a>
         <ul class="side-menu top">
             <li [ngClass]="{'active': isActive('/dashboard')}">
@@ -20,14 +20,14 @@
         
         </ul>
         <ul class="side-menu top">
-            <li [ngClass]="{'active': isActive('/admin/configuracion')}">
+            <li >
                 <a routerLink="/admin/configuracion">
                     <i class="fas fa-cog"></i>
                     <span class="texto">Configuración</span>
                 </a>
             </li>
             <li>
-                <a class="logout">
+                <a class="logout" (click)="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                     <span class="texto">Cerrar Sesión</span>
                 </a>
@@ -41,7 +41,8 @@
         <!-- NAVBAR -->
         <nav>
             <i (click)="addToggle()" class="fas fa-bars"></i>
-            <span class="user-info">USERNAME</span>
+         <span class="user-info">{{ username || 'Invitado' }}</span>
+
         </nav>
         <!-- MAIN -->
         <main>

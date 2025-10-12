@@ -1,19 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { GoogleService } from '../../core/services/google.service';
 
 @Component({
   selector: 'app-sidebar-user',
-imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule],
 
   templateUrl: './sidebar-user.html',
   styleUrl: './sidebar-user.css'
 })
 export class SidebarUser {
+  user: any;
   constructor(
+    private authService: GoogleService,
     private router: Router
   ) {
 
+  }
+  username: any
+  ngOnInit() {
+    this.username = localStorage.getItem('username')
   }
   isActive(path: string): boolean {
     return this.router.url === path;
@@ -29,7 +36,16 @@ export class SidebarUser {
     this.status = !this.status;
   }
   logout() {
-    //   this.login.logout();
-    window.location.href = '';
+    this.authService.logout().subscribe({
+      next: (res) => {
+
+        this.router.navigate(['/login']);
+
+        console.log('🔴 Sesión cerrada:', res);
+      },
+      error: (err) => {
+        console.error('❌ Error en logout:', err);
+      }
+    });
   }
 }

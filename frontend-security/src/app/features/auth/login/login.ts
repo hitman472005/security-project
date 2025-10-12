@@ -48,13 +48,15 @@ export class Login {
               console.log(ROLES.ROLE_USER); // "ROLE_USER"
 
               if (rol == ROLES.ROLE_ADMIN) {
+                localStorage.setItem('username', user.username)
                 console.log("INGRESO A ADMINISTRADOR")
               } else {
-                console.log("INGRESO USER")   
+                console.log("INGRESO USER")
+                localStorage.setItem('username', user.username)
                 this.router.navigate(['/dashboard']);
               }
               // Aquí podrías redirigir, guardar info o mostrar mensaje
-           
+
             },
             error: (error) => {
               console.error('Error obteniendo usuario actual:', error);
@@ -92,5 +94,8 @@ export class Login {
       login: ['', Validators.required],
       password: ['', Validators.required]
     });
+  }
+  register() {
+    this.router.navigate(['/register'])
   }
 }
