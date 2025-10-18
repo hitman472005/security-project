@@ -13,6 +13,7 @@ import { HomeAdmin } from './features/admin/home-admin/home-admin';
 import { DashboardAdmin } from './features/admin/dashboard-admin/dashboard-admin';
 import { UserAdmin } from './features/admin/user-admin/user-admin';
 import { ConfiguracionAdmin } from './features/admin/configuracion-admin/configuracion-admin';
+import { UserPerfil } from './features/admin/user-perfil/user-perfil';
 
 
 export const routes: Routes = [
@@ -33,6 +34,7 @@ export const routes: Routes = [
         canActivate: [AdminGuard],
         children: [
             { path: 'dashboard-admin', component: DashboardAdmin },
+            { path: 'perfil-admin', component: UserPerfil },
             { path: 'user-admin', component: UserAdmin },
             { path: 'configuracion-admin', component: ConfiguracionAdmin },
         ]

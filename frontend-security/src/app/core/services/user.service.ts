@@ -136,4 +136,10 @@ export class UserService {
   blockedUsuario(userId: number): Observable<any> {
     return this.http.put(`${this.backendUrl}/users/blocked/${userId}`, {});
   }
+
+
+  getUserStatusPercentages() {
+    return this.http.get<any[]>(`${this.backendUrl}/users/status-percentages`);
+  }
+
 }

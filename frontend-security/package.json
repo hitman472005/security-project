@@ -30,6 +30,8 @@
     "@angular/router": "^20.0.0",
     "angular-oauth2-oidc": "^20.0.2",
     "bootstrap": "^5.3.8",
+    "chart.js": "^4.5.1",
+    "ng2-charts": "^8.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.24.1",
     "tslib": "^2.3.0",

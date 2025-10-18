@@ -11,6 +11,12 @@
                     <span class="texto">Principal</span>
                 </a>
             </li>
+            <li [ngClass]="{'active': isActive('/perfil-admin')}">
+                <a routerLink="/perfil-admin">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span class="texto">Perfil</span>
+                </a>
+            </li>
             <li [ngClass]="{'active': isActive('/user-admin')}">
                 <a routerLink="/user-admin">
                     <i class="fa-solid fa-user"></i>
