@@ -1,4 +1,6 @@
-package com.example.backend_security.exception;
+package com.example.backend_security.security;
+
+import com.example.backend_security.constants.AuthConstants;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +17,7 @@ public class JwtUnauthorizedEntryPoint  implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"USUARIO NO AUTORIZADO");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, AuthConstants.USUARIO_NO_AUTORIZADO);
     }
 
 }

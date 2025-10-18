@@ -98,5 +98,13 @@ export class GoogleService {
     );
   }
 
+  isLoggedIn() {
+    let tokenStr = localStorage.getItem('jwt');
+    if (tokenStr == undefined || tokenStr == '' || tokenStr == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
 }

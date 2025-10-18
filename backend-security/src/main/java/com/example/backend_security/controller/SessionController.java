@@ -50,12 +50,8 @@ public class SessionController {
     // =========================
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable Long userId) {
-        try {
-            List<Session> sessions = sessionService.getSessionsByUser(userId);
-            return ResponseEntity.ok(sessions);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
-        }
+        List<Session> sessions = sessionService.getSessionsByUser(userId);
+        return ResponseEntity.ok(sessions);
     }
 }
 

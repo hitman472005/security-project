@@ -43,20 +43,20 @@ export class Login {
           // Obtener usuario actual
           this.authService.getCurrentUser().subscribe({
             next: (user) => {
+
               console.log('Usuario actual:', user.role.name);
               const rol = user.role.name
               console.log(ROLES.ROLE_USER); // "ROLE_USER"
 
               if (rol == ROLES.ROLE_ADMIN) {
                 localStorage.setItem('username', user.username)
-                console.log("INGRESO A ADMINISTRADOR")
+                console.log("INGRESO A ADMINISTRADOR" + user)
+                this.router.navigate(['/dashboard-admin']);
               } else {
                 console.log("INGRESO USER")
                 localStorage.setItem('username', user.username)
                 this.router.navigate(['/dashboard']);
               }
-              // Aquí podrías redirigir, guardar info o mostrar mensaje
-
             },
             error: (error) => {
               console.error('Error obteniendo usuario actual:', error);
@@ -85,6 +85,7 @@ export class Login {
   }
 
   ngOnInit(): void {
+
     this.initForm();
   }
 

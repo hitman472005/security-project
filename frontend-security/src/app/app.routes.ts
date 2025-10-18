@@ -9,28 +9,40 @@ import { UserGuard } from './core/guards/user.guard';
 import { NoAuthGuard } from './core/guards/noauth.guard';
 import { HomeUser } from './features/user/home-user/home-user';
 import { User } from './features/user/user/user';
+import { HomeAdmin } from './features/admin/home-admin/home-admin';
+import { DashboardAdmin } from './features/admin/dashboard-admin/dashboard-admin';
+import { UserAdmin } from './features/admin/user-admin/user-admin';
+import { ConfiguracionAdmin } from './features/admin/configuracion-admin/configuracion-admin';
 
 
 export const routes: Routes = [
 
-    // Página Principal
+    // Página principal pública
     { path: '', component: Principal, pathMatch: 'full' },
 
-    // Login / Register (solo accesibles si NO está logueado)
+    // Login y registro → solo accesibles si NO está logueado
     { path: 'login', component: Login, canActivate: [NoAuthGuard] },
     { path: 'register', component: Register, canActivate: [NoAuthGuard] },
 
-    // Callback de autenticación (puede estar libre)
+    // Callback libre (por ejemplo para Google Auth)
     { path: 'auth-callback', component: AuthCallback },
 
-    // Dashboard (solo accesible si está logueado)
-    //    { path: 'dashboard', component: Dashboard, canActivate: [UserGuard] },
+    {
+        path: '',
+        component: HomeAdmin,
+        canActivate: [AdminGuard],
+        children: [
+            { path: 'dashboard-admin', component: DashboardAdmin },
+            { path: 'user-admin', component: UserAdmin },
+            { path: 'configuracion-admin', component: ConfiguracionAdmin },
+        ]
+
+    },
     {
         path: '',
         component: HomeUser,
         canActivate: [UserGuard],
         children: [
-            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', component: Dashboard },
             { path: 'user', component: User }
         ]

@@ -60,7 +60,6 @@ public class GoogleController {
                     "picture", user.getPhotoUrl()
             ));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
 

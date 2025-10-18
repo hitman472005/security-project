@@ -1,5 +1,7 @@
 package com.example.backend_security.security;
 
+import com.example.backend_security.constants.AuthConstants;
+import com.example.backend_security.exception.JwtAuthenticationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +33,18 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+        // 🔹 Ignorar endpoints públicos y Swagger
+        if (path.startsWith("/security/api/v1/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+
+                || path.equals("/users")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
         String requestTokenHeader = request.getHeader("Authorization");
         String jwtToken = null;
         String usernameOrEmail = null;
@@ -40,13 +54,8 @@ public class JwtFilter extends OncePerRequestFilter {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 usernameOrEmail = this.jwtUtil.extractUsername(jwtToken);
-                System.out.println("🟢 Token recibido para usuario/email: " + usernameOrEmail);
             } catch (Exception e) {
-                System.err.println("❌ Error al extraer username/email del token: " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("text/plain");
-                response.getWriter().write("TOKEN INVÁLIDO O EXPIRADO");
-                return;
+                throw new JwtAuthenticationException(AuthConstants.TOKEN_INVALIDO);
             }
         }
 
@@ -54,8 +63,6 @@ public class JwtFilter extends OncePerRequestFilter {
         if (usernameOrEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(usernameOrEmail);
-                System.out.println("👤 Usuario cargado: " + userDetails.getUsername());
-
                 // 🔹 3️⃣ Validar token JWT
                 if (this.jwtUtil.validateToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
@@ -67,10 +74,10 @@ public class JwtFilter extends OncePerRequestFilter {
                     );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 } else {
-                    System.out.println("❌ Token no válido para el usuario: " + usernameOrEmail);
+                    throw new JwtAuthenticationException(AuthConstants.TOKEN_NO_VALIDO_PARA_USUARIO);
                 }
             } catch (Exception ex) {
-                System.err.println("⚠️ Error cargando usuario o validando token: " + ex.getMessage());
+                throw new JwtAuthenticationException(AuthConstants.ERROR_VALIDANDO_TOKEN);
             }
         }
 

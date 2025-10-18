@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { GoogleService } from '../services/google.service';
 
 
@@ -9,17 +9,30 @@ import { GoogleService } from '../services/google.service';
 })
 export class NoAuthGuard implements CanActivate {
 
-  constructor(private authService: GoogleService, private router: Router) {}
+  constructor(private authService: GoogleService, private router: Router) { }
 
-  canActivate(): Observable<boolean | UrlTree> {
-    const token = this.authService.token; // JWT guardado
+  async canActivate(): Promise<boolean | UrlTree> {
+    if (this.authService.isLoggedIn()) {
+      try {
+        const user = await firstValueFrom(this.authService.getCurrentUser());
+        const role = user?.role?.name;
 
-    if (token) {
-      // Usuario logueado → redirige al dashboard
-      return of(this.router.parseUrl('/dashboard'));
-    } else {
-      // No logueado → puede entrar a login/register
-      return of(true);
+        // Definir destino según rol
+        const destino: string =
+          role === 'ROLE_ADMIN' ? '/dashboard-admin' :
+          role === 'ROLE_USER' ? '/dashboard' :
+          '/login';
+
+        // Retornar UrlTree → Angular hace la navegación
+        return this.router.parseUrl(destino);
+
+      } catch (error) {
+        console.error('Error obteniendo usuario:', error);
+        return this.router.parseUrl('/login');
+      }
     }
+
+    // No está logueado → puede continuar
+    return true;
   }
 }

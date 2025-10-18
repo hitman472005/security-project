@@ -7,13 +7,13 @@ import { OAuthModule } from 'angular-oauth2-oidc';
 
 import { App } from './app/app';
 import { routes } from './app/app.routes';
-
+import { authInterceptor } from './app/core/interceptor/auth.interceptor';
 
 bootstrapApplication(App, {
   providers: [
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])), // ✅ Interceptor activo aquí
     provideRouter(routes),
     provideBrowserGlobalErrorListeners(),
-    importProvidersFrom(OAuthModule.forRoot())   // ✅ solo esto
+    importProvidersFrom(OAuthModule.forRoot()) // ✅ Mantén tu OAuth
   ]
 });

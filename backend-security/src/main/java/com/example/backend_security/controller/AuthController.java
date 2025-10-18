@@ -31,9 +31,9 @@ public class AuthController {
 
     @Autowired
     private UserService usuarioService;
+
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) throws Exception {
-        System.out.println("🟢 Entró a /logout con header: " + authHeader);
         String jwt = authHeader.replace("Bearer ", "");
         tokenService.invalidateToken(jwt);
         return ResponseEntity.ok("Logout successful. Token invalidated.");
@@ -54,14 +54,9 @@ public class AuthController {
 
     @PostMapping("/generate-token")
     public ResponseEntity<?> generarToken(@RequestBody LoginRequest jwtRequest) throws Exception {
-        try {
-            return ResponseEntity.ok(userService.login(jwtRequest));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("ERROR INTERNO");
-        }
+        return ResponseEntity.ok(userService.login(jwtRequest));
     }
+
     @GetMapping("/actual-usuario")
     public ResponseEntity<?> obtenerUsuarioActual(Principal principal) {
         try {

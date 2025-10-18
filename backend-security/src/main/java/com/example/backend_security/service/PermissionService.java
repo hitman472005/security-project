@@ -1,6 +1,8 @@
 package com.example.backend_security.service;
 
 import com.example.backend_security.entity.Permission;
+import com.example.backend_security.exception.ResourceAlreadyExistsException;
+import com.example.backend_security.exception.ResourceNotFoundException;
 import com.example.backend_security.repository.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,9 @@ public class PermissionService {
     }
 
     // Crear Permission
-    public Permission createPermission(Permission permission) throws Exception {
+    public Permission createPermission(Permission permission)  {
         if (permissionRepository.findByCode(permission.getCode()).isPresent()) {
-            throw new Exception("Permission already exists");
+            throw new ResourceAlreadyExistsException("Permission already exists");
         }
         return permissionRepository.save(permission);
     }
@@ -38,9 +40,9 @@ public class PermissionService {
     }
 
     // Actualizar Permission
-    public Permission updatePermission(Long id, Permission updatedPermission) throws Exception {
+    public Permission updatePermission(Long id, Permission updatedPermission)  {
         Permission permission = permissionRepository.findById(id)
-                .orElseThrow(() -> new Exception("Permission not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
 
         permission.setCode(updatedPermission.getCode());
         permission.setDescription(updatedPermission.getDescription());
@@ -49,9 +51,9 @@ public class PermissionService {
     }
 
     // Eliminar Permission
-    public void deletePermission(Long id) throws Exception {
+    public void deletePermission(Long id)  {
         Permission permission = permissionRepository.findById(id)
-                .orElseThrow(() -> new Exception("Permission not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Permission not found"));
         permissionRepository.delete(permission);
     }
 }

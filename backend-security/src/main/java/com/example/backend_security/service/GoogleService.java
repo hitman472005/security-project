@@ -1,6 +1,8 @@
 package com.example.backend_security.service;
 
+import com.example.backend_security.constants.GoogleConstants;
 import com.example.backend_security.dto.GoogleResponse;
+import com.example.backend_security.exception.GoogleServiceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,6 @@ public class GoogleService {
     }
 
 
-
     // 1️⃣ Intercambiar code por token
     public GoogleResponse exchangeCodeForToken(String code) {
         String tokenUrl = "https://oauth2.googleapis.com/token";
@@ -57,8 +58,9 @@ public class GoogleService {
         );
 
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-            throw new RuntimeException("Error intercambiando code por token en Google");
+            throw new GoogleServiceException(GoogleConstants.ERROR_CODE_GOOGLE);
         }
+
 
         return response.getBody();
     }
@@ -80,9 +82,11 @@ public class GoogleService {
         );
 
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-            throw new RuntimeException("Error obteniendo info de usuario en Google");
+            throw new GoogleServiceException(GoogleConstants.ERROR_INFO_GOOGLE);
         }
 
         return response.getBody();
+
+
     }
 }

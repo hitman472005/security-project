@@ -20,13 +20,16 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^20.2.2",
     "@angular/common": "^20.0.0",
     "@angular/compiler": "^20.0.0",
     "@angular/core": "^20.0.0",
     "@angular/forms": "^20.0.0",
+    "@angular/material": "^20.2.2",
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
     "angular-oauth2-oidc": "^20.0.2",
+    "bootstrap": "^5.3.8",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.24.1",
     "tslib": "^2.3.0",
@@ -43,6 +46,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-      "typescript": "~5.8.2"
+    "typescript": "~5.8.2"
   }
 }

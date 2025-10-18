@@ -41,40 +41,18 @@ public class JwtUtil {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
 
-        // Logs para depurar
-        System.out.println("=== GENERATE TOKEN ===");
-        System.out.println("Username: " + user.getUsername());
-        System.out.println("Email: " + user.getEmail());
-
-        // Usa el username si existe, de lo contrario el email
         String subject = (user.getUsername() != null && !user.getUsername().isEmpty())
                 ? user.getUsername()
                 : user.getEmail();
 
-        System.out.println("Subject usado para el token: " + subject);
-        System.out.println("========================");
-
         return createToken(claims, subject);
     }
 
-
-    /*
-        private String createToken(Map<String, Object> claims, String subject) {
-            return Jwts.builder()
-                    .setClaims(claims)
-                    .setSubject(subject)
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                    .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                    .compact();
-        }*/
     private String createToken(Map<String, Object> claims, String subject) {
         LocalDateTime now = LocalDateTime.now();
         Date issuedAt = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         Date expiration = Date.from(now.plusSeconds(jwtExpiration / 1000).atZone(ZoneId.systemDefault()).toInstant());
 
-        System.out.println("🟢 Generando token para: " + subject);
-        System.out.println("🟢 Clave secreta: " + SECRET_KEY);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)

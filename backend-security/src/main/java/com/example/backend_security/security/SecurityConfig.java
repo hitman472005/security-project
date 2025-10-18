@@ -1,6 +1,5 @@
 package com.example.backend_security.security;
 
-import com.example.backend_security.exception.JwtUnauthorizedEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,12 +18,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtUnauthorizedEntryPoint unauthorizedHandler;
     private final JwtFilter jwtFilter;
-    private final CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtUnauthorizedEntryPoint unauthorizedHandler, JwtFilter jwtFilter, CustomUserDetailsService userDetailsService) {
+
+    public SecurityConfig(JwtUnauthorizedEntryPoint unauthorizedHandler, JwtFilter jwtFilter) {
         this.unauthorizedHandler = unauthorizedHandler;
         this.jwtFilter = jwtFilter;
-        this.userDetailsService = userDetailsService;
+
     }
 
     @Bean

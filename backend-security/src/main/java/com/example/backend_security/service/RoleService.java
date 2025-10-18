@@ -1,6 +1,8 @@
 package com.example.backend_security.service;
 
 import com.example.backend_security.entity.Role;
+import com.example.backend_security.exception.ResourceAlreadyExistsException;
+import com.example.backend_security.exception.ResourceNotFoundException;
 import com.example.backend_security.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,9 @@ public class RoleService {
     }
 
     // Crear Role
-    public Role createRole(Role role) throws Exception {
+    public Role createRole(Role role) {
         if (roleRepository.findByName(role.getName()).isPresent()) {
-            throw new Exception("Role already exists");
+            throw new ResourceAlreadyExistsException("Role already exists");
         }
         return roleRepository.save(role);
     }
@@ -37,9 +39,9 @@ public class RoleService {
     }
 
     // Actualizar Role
-    public Role updateRole(Long id, Role updatedRole) throws Exception {
+    public Role updateRole(Long id, Role updatedRole) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new Exception("Role not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
         role.setName(updatedRole.getName());
         role.setDescription(updatedRole.getDescription());
@@ -48,9 +50,9 @@ public class RoleService {
     }
 
     // Eliminar Role
-    public void deleteRole(Long id) throws Exception {
+    public void deleteRole(Long id) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new Exception("Role not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
         roleRepository.delete(role);
     }
 }
